@@ -22,39 +22,25 @@ dout.write(("REDY\n").getBytes());
 dout.flush();
 str = (String)in.readLine();
 System.out.println("server says "+str);
-dout.write(("NONE\n").getBytes());
-dout.flush();
-str = (String)in.readLine();
-System.out.println("server says "+str);
 dout.write(("GETS All\n").getBytes());
 dout.flush();
 str = (String)in.readLine();
 System.out.println("server says "+str);
+String[] serverDatalist = str.split(" ");
 dout.write(("OK\n").getBytes());
 dout.flush();
+int serverNum = Integer.parseInt(serverDatalist[1]);
+System.out.println(serverNum);
+//str = (String)in.readLine();
+//System.out.println("server says "+str);
 
-str = (String)in.readLine();
-System.out.println("server says "+str);
-
-int num = str.charAt(5);
-//System.out.println(num+" servers");
-
-/*while(str !=null){
-
-str = (String)in.readLine();
-System.out.println("server says "+str);
-
-dout.write(("OK\n").getBytes());
-dout.flush();
-break;
-
-}*/
-
-for(int i = 0; i < 7; i++){
+for(int i=0; i< serverNum; i++){
 
 str = (String)in.readLine();
 System.out.println("server says "+str);
 }
+
+//schd
 
 dout.write(("OK\n").getBytes());
 dout.flush();
