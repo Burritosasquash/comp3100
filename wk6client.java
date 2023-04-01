@@ -8,6 +8,7 @@ DataOutputStream dout=new DataOutputStream(s.getOutputStream());
 DataInputStream dis=new DataInputStream(s.getInputStream());
 BufferedReader in=new BufferedReader(new InputStreamReader(s.getInputStream()));
 
+
 String username = System.getProperty("user.name");
 
 dout.write(("HELO\n").getBytes());
@@ -27,9 +28,7 @@ System.out.println("server says "+str);
 	System.out.println("server says "+str);
 	String[] serverJobs = str.split(" ");
 	int jobNum = Integer.parseInt(serverJobs[2]);
-//	int[]jobNumArr = new int[10];
-//	jobNumArr[i] = Integer.parseInt(serverJobs[2]);
-//	System.out.println("Job no. "+jobNumArr[i]);
+
 
 //get server info
 
@@ -40,16 +39,18 @@ System.out.println("server says "+str);
 String[] serverDatalist = str.split(" ");
 dout.write(("OK\n").getBytes());
 dout.flush();
-int serverNum = Integer.parseInt(serverDatalist[1]);
-int[] serverCoreArr = new int[serverNum];
-int[] serverIdArr = new int[serverNum];
-String[] serverTypeArr = new String[serverNum];
 
-System.out.println(serverNum);
+int serverCount = Integer.parseInt(serverDatalist[1]);
+int[] serverNumArr = new int[serverCount];
+int[] serverCoreArr = new int[serverCount];
+int[] serverIdArr = new int[serverCount];
+String[] serverTypeArr = new String[serverCount];
+
+System.out.println(serverCount);
 
 //finding all servers
 
-for(int i=0; i< serverNum; i++){
+for(int i=0; i< serverCount; i++){
 
 	str = (String)in.readLine();
 	System.out.println("server says "+str);
@@ -67,39 +68,93 @@ dout.flush();
 str = (String)in.readLine();
 System.out.println("server says "+str);
 
-System.out.println("highest core count: "+serverCoreArr[serverNum-1]);
-System.out.println("server type with highest cores: "+serverTypeArr[serverNum-1]);
-System.out.println("serverId: "+serverIdArr[serverNum-1]);
-
-//schd must schedule jobs below here but must find largest server first
+System.out.println("highest core count: "+serverCoreArr[serverCount-1]);
+System.out.println("server type with highest cores: "+serverTypeArr[serverCount-1]);
+System.out.println("serverId: "+serverIdArr[serverCount-1]);
 
 
-dout.write(("SCHD "+jobNum+" "+serverTypeArr[4]+" "+serverIdArr[4]+"\n").getBytes());
-dout.flush();
-str = (String)in.readLine();
-System.out.println("server says "+str);
+//schd must queue jobs below here but must find largest server first
+int jobCount = 0;
+while(!str.contains("CHKQ")){
 
-for(int i = 0; i<5; i++){
-
-//getting new jobs in the loop and scheduling immediately
+//getting new jobs in the loop and queuing immediately
         
 	dout.write(("REDY\n").getBytes());        
 	dout.flush();
 	str = (String)in.readLine();        
 	System.out.println("server says "+str);
-	serverJobs = str.split(" ");
-	jobNum = Integer.parseInt(serverJobs[2]);
 
-	dout.write(("SCHD "+jobNum+" "+serverTypeArr[serverNum-1]+" "+serverIdArr[serverNum-1]+"\n").getBytes());
+	if(str.contains("CHKQ")){
+		break;
+	}
+	jobNum = Integer.parseInt(serverJobs[2]);
+	jobCount++;
+	System.out.println(jobCount);
+	dout.write(("ENQJ GQ\n").getBytes());
+        dout.flush();
+        str = (String)in.readLine();
+        System.out.println("server says "+str);
+}
+
+//list the jobs in global queue
+
+dout.write(("LSTQ GQ *\n").getBytes());
+dout.flush();
+str = (String)in.readLine();
+System.out.println("server says "+str);
+String[] serverQueueList = str.split(" ");
+dout.write(("OK\n").getBytes());
+dout.flush();
+str = (String)in.readLine();
+System.out.println("server says "+str);
+int serverQueue = Integer.parseInt(serverQueueList[1]);
+dout.write(("OK\n").getBytes());
+dout.flush();
+for(int i = 0; i < serverQueue; i++){
+	str = (String)in.readLine();
+	System.out.println("server says "+str);
+}
+
+
+//int queueCount = Integer.parseInt(serverDatalist[1]);
+
+
+int j = 0;
+System.out.println(jobCount);
+for(int i = 0; i  < jobCount; i++){
+	System.out.println(i);
+	System.out.println(j);
+	System.out.println(serverTypeArr[serverCount-1]);
+	dout.write(("DEQJ GQ 0\n").getBytes());
+        dout.flush();
+        str = (String)in.readLine();
+        System.out.println("server says "+str);
+        serverJobs = str.split(" ");
+
+        if(j == serverIdArr[6]){
+                j = 0;
+        }
+
+
+	dout.write(("SCHD "+i+" "+serverTypeArr[serverCount-1]+" "+serverIdArr[j]+"\n").getBytes());
 	dout.flush();
 	str = (String)in.readLine();
 	System.out.println("server says "+str);
+	
 
 
+}
+for(int i = 0; i < jobCount + 1; i++){
+dout.write(("REDY\n").getBytes());
+dout.flush();
+str = (String)in.readLine();
+System.out.println("server says "+str);
 }
 
 dout.write(("QUIT\n").getBytes());
 dout.flush();
+str = (String)in.readLine();
+System.out.println("server says "+str);
 System.out.println("server connection ended");
 dout.close();
 s.close();
