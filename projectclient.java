@@ -73,23 +73,31 @@ System.out.println("highest core count: "+serverCoreArr[serverCount-1]);
 System.out.println("server type with highest cores: "+serverTypeArr[serverCount-1]);
 System.out.println("serverId: "+serverIdArr[serverCount-1]);
 
+//schedule first job now knowing the largest server sizes
 
-//schd must queue jobs below here but must find largest server first
-int jobCount = 0;
 int j = 0;
+
+        jobNum = Integer.parseInt(serverJobs[2]);
+        dout.write(("SCHD "+jobNum+" "+serverTypeArr[serverCount-1]+" "+0+"\n").getBytes());
+        dout.flush();
+	j++;
+
+
+//begin loop for redying, getting jobs and job information
+
+int jobCount = 0;
+
 while(!str.contains("NONE")){
-        str = (String)in.readLine();
-        System.out.println("server says "+str);
 	if(str.contains("NONE")){
 		break;
 	}
 
+        str = (String)in.readLine();
+        System.out.println("server says "+str);
+
+
 //getting new jobs in the loop and queuing immediately
         
-	dout.write(("REDY\n").getBytes());        
-	dout.flush();
-	str = (String)in.readLine();        
-	System.out.println("server says "+str);
 	serverJobs = str.split(" ");
 	if(str.contains("JCPL")){
 	        dout.write(("REDY\n").getBytes());
@@ -104,6 +112,10 @@ while(!str.contains("NONE")){
 		dout.write(("SCHD "+jobNum+" "+serverTypeArr[serverCount-1]+" "+j+"\n").getBytes());
         	dout.flush();
 		j++;
+	}
+	if(str.contains("OK")){
+        dout.write(("REDY\n").getBytes());
+        dout.flush();
 	}
 }
 
