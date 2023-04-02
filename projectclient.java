@@ -66,11 +66,20 @@ for(int i=0; i< serverCount; i++){
 
 dout.write(("OK\n").getBytes());
 dout.flush();
-//str = (String)in.readLine();
-//System.out.println("server says "+str);
 
-System.out.println("highest core count: "+serverCoreArr[serverCount-1]);
-System.out.println("server type with highest cores: "+serverTypeArr[serverCount-1]);
+//finding largest server type || first server to have largest amount of cores
+int largestCoreServer = 0;
+String largestServerType = null;
+for(int i = 0; i < serverCount; i++){
+	if(largestCoreServer < serverCoreArr[i]){
+		largestCoreServer = serverCoreArr[i];
+		largestServerType = serverTypeArr[i];
+	}
+}
+
+
+System.out.println("highest core count: "+largestCoreServer);
+System.out.println("server type with highest cores: "+largestServerType);
 System.out.println("serverId: "+serverIdArr[serverCount-1]);
 
 //schedule first job now knowing the largest server sizes
@@ -78,7 +87,7 @@ System.out.println("serverId: "+serverIdArr[serverCount-1]);
 int j = 0;
 
         jobNum = Integer.parseInt(serverJobs[2]);
-        dout.write(("SCHD "+jobNum+" "+serverTypeArr[serverCount-1]+" "+0+"\n").getBytes());
+        dout.write(("SCHD "+jobNum+" "+largestServerType+" "+0+"\n").getBytes());
         dout.flush();
 	j++;
 
@@ -109,7 +118,7 @@ while(!str.contains("NONE")){
 			j = 0;
 		}
 	        jobNum = Integer.parseInt(serverJobs[2]);
-		dout.write(("SCHD "+jobNum+" "+serverTypeArr[serverCount-1]+" "+j+"\n").getBytes());
+		dout.write(("SCHD "+jobNum+" "+largestServerType+" "+j+"\n").getBytes());
         	dout.flush();
 		j++;
 	}
