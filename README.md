@@ -1,5 +1,7 @@
 in this repository you will find my stage 1 project containing a client side program that connects to the application ds-server.
 
+in order to run this program you must have installed the program ds-sim off of git hub using the link: https://github.com/distsys-MQ/ds-sim.git
+
 please see the following steps to connect the file projectclient.class to the server and run the program:
 
 step 1:
