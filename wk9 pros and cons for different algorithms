@@ -1,0 +1,55 @@
+the pros and cons of the three different scheduling methods:
+
+- First-fit (FF)
+- Best-fit (BF)
+- Worst-fit (WF)
+
+
+* First fit:
+
+- Pros:
+
+1. finds the first sever with available resources meaning it can complete the task.
+
+- Cons:
+
+1. if no server available it will go to first server it finds with available resources regardless of availability.
+
+2. Will end up having all servers active if large amount of jobs, this is bad for cost as the larger servers could be hosting jobs that a small server could handle and it would be cheaper.
+
+total cost:
+
+$1.05
+
+
+* Best fit:
+
+- Pros:
+
+1. will match the job with the server with a suffient amount of cores.
+2. sticks to the idea of allocating to the first server of those who are fit, for example if server 1 and server 3 are both fit, server 1 will be selected.
+
+- Cons:
+
+1. because the alogrithm only sorts based on core count it does not factor in other elements such as memory or disk space, though it will find a server that fits those requirements it may use a server that costs more to run.
+
+total cost:
+
+$1.05
+
+* Worst fit:
+
+- Pros:
+
+1. will always be able to run the jobs as it will alsways go for the server with the largest core.
+
+- Cons:
+
+1. similar to best fit however in reverse, it will choose the last of the servers that are seen to be fit.
+
+total cost:
+
+$1.07 
+
+worst fit is the most expensive as it demands the highest resources.
+
